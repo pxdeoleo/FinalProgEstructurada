@@ -40,7 +40,10 @@ Module Program
         Dim suma, resultado As Double
 
         If x.Any Then
-            suma = x.Sum(Function(num) Math.Pow(num - x.Average, 2))
+
+            For Each item As Double In x
+                suma += Math.Pow(item - x.Average, 2)
+            Next
             'sum es la suma de todos los datos.
             'function(num) es para interactuar con los datos del arreglo
             'pow es para elevar a una cantidad en este caso 2
