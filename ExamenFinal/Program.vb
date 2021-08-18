@@ -1,4 +1,4 @@
-Imports System
+﻿Imports System
 
 Module Program
     Sub GameOver()
@@ -27,76 +27,89 @@ Module Program
         Return name
     End Function
 
+    Function DesvEst(x As Double())
+        Dim suma, resultado As Double
+
+        If x.Any Then
+            suma = x.Sum(Function(num) Math.Pow(num - x.Average, 2))
+            'sum es la suma de todos los datos.
+            'function(num) es para interaturar con los datos del arreglo
+            'pow es para elevar a una cantidad en este caso 2
+            'average es el promedio
+            'entonces al numero se le resta el promedio y se eleva al cuadrado
+            '
+            resultado = Math.Sqrt((suma) / (x.Length - 1))
+            'SQRT es para sacar la raiz del resultado de la suma final que calculamos arriba entre el tama;o de nuestro arreglo
+            Return resultado
+        End If
+        Return 0
+    End Function
+
     Sub Main(args As String())
         Dim continuar As Boolean = True
 
         Console.Title = "The Hollow"
 
-        Console.WriteLine("Mientras nuestros 3 amigos despertaron de un largo sue�o, encerrados en una")
-        Console.WriteLine("habitaci�n, estaba pregunt�ndose, �qui�nes eran?, de pronto, uno de ellos encontr�")
-        Console.WriteLine("un papel dentro del pantal�n con un nombre, luego los dem�s hicieron lo mismo." + Environment.NewLine)
+        Console.WriteLine("Mientras nuestros 3 amigos despertaron de un largo sueño, encerrados en una")
+        Console.WriteLine("habitación, estaba preguntándose, ¿quiénes eran?, de pronto, uno de ellos encontró")
+        Console.WriteLine("un papel dentro del pantalón con un nombre, luego los demás hicieron lo mismo." + Environment.NewLine)
 
-#Region "1. Asignacion de nombres"
+#Region "Accion No. 1"
         ' Lista de nombres Hombres [0-2] Mujeres [3-4] Objetos [5-9]
         Dim nombres As New List(Of String)({"Kevin", "Alexander", "Jose", "Ana", "Mabel", "Telefono", "Impresora", "Teclado", "Monitor", "Mouse"})
-        Dim cont_hombres, cont_mujeres As Integer
 
-        Dim chances_nombre As Integer = 5
+        Dim intentos As Integer = 0
 
-        Dim players As New List(Of String)({"", "", ""})
+        Dim hombres As List(Of String)
+        Dim mujer As String = ""
 
-        players(0) = "Kevin"
-        players(1) = "Jose"
-        players(2) = "Ana"
+        While True
+            Dim tmp_nombres As New List(Of String)({"Kevin", "Alexander", "Jose", "Ana", "Mabel", "Telefono", "Impresora", "Teclado", "Monitor", "Mouse"})
+            hombres = New List(Of String)
+            mujer = ""
 
-        'While True
-        '    Dim tmp_nombres As New List(Of String)({"Kevin", "Alexander", "Jose", "Ana", "Mabel", "Telefono", "Impresora", "Teclado", "Monitor", "Mouse"})
+            intentos += 1
 
-        '    cont_hombres = 0
-        '    cont_mujeres = 0
+            For h As Integer = 0 To 2 Step 1
+                Dim player As String
+                player = random_name(tmp_nombres)
 
-        '    For i As Integer = 0 To 2 Step 1
-        '        players(i) = random_name(tmp_nombres)
+                If nombres.GetRange(0, 3).Contains(player) Then
+                    hombres.Add(player)
+                End If
 
-        '        If nombres.GetRange(0, 3).Contains(players(i)) Then
-        '            cont_hombres += 1
-        '        End If
+                If nombres.GetRange(3, 2).Contains(player) Then
+                    mujer = player
+                End If
+                Console.WriteLine($"Intento: {intentos} | Nombre: {player}")
+            Next
+            Console.WriteLine("--------------")
 
-        '        If nombres.GetRange(3, 2).Contains(players(i)) Then
-        '            cont_mujeres += 1
-        '        End If
 
+            If hombres.Count = 2 And Not String.IsNullOrEmpty(mujer) Then
+                'Console.ReadKey()
+                Exit While
+            Else
+                If intentos = 5 Then
+                    Console.WriteLine("THE HOLLOW CANNOT BE INITIALIZED, GAME OVER")
+                    GameOver()
+                End If
+            End If
 
-        '    Next
+        End While
 
-        '    chances_nombre -= 1
-
-        '    If cont_hombres = 2 And cont_mujeres = 1 Then
-        '        Console.WriteLine("Cantidad correcta")
-        '        Console.WriteLine($"Nombres: {players(0)}, {players(1)}, {players(2)}")
-        '        'Console.ReadKey()
-        '        Exit While
-        '    Else
-        '        If chances_nombre = 0 Then
-        '            Console.WriteLine("THE HOLLOW CANNOT BE INITIALIZED, GAME OVER")
-        '            GameOver()
-        '        End If
-        '    End If
-
-        'End While
-
-        Console.WriteLine($"Los nombres de nuestros h�roes son {players(0)}, {players(1)} y {players(2)}" + Environment.NewLine)
-
+        Console.WriteLine($"Los nombres de nuestros héroes son {hombres(0)}, {mujer} y {hombres(1)}" + Environment.NewLine)
+        Console.ReadKey()
 
 #End Region
 
-#Region "2. Palabra palindroma"
+#Region "Accion 2. Palabra palindroma"
         Dim palabra As String
-        Dim intentos As Integer = 1
+        intentos = 0
 
-        Console.WriteLine("Dentro de la habitaci�n hay una m�quina de escribir, la cual le va a permitir salir de")
-        Console.WriteLine("la habitaci�n escribiendo con ella la palabra m�gica, la cual debe ser una palabra")
-        Console.WriteLine("Pal�ndroma." + Environment.NewLine)
+        Console.WriteLine("Dentro de la habitación hay una máquina de escribir, la cual le va a permitir salir de")
+        Console.WriteLine("la habitación escribiendo con ella la palabra mágica, la cual debe ser una palabra")
+        Console.WriteLine("Palíndroma." + Environment.NewLine)
 
         'Bucle de intentos
         While True
@@ -118,41 +131,349 @@ Module Program
 
 #End Region
 
-        Console.WriteLine($"Luego de que nuestros amigos {players(0)}, {players(1)} y {players(2)} son")
-        Console.WriteLine("sacados de la habitaci�n, aparecieron en un camino helado y desconocido. En este")
-        Console.WriteLine("camino, encontraron un mapa, con la ubicaci�n secreta de la llave que los llevar�a a")
+        Console.WriteLine($"Luego de que nuestros amigos {hombres(0)}, {mujer} y {hombres(1)} son")
+        Console.WriteLine("sacados de la habitación, aparecieron en un camino helado y desconocido. En este")
+        Console.WriteLine("camino, encontraron un mapa, con la ubicación secreta de la llave que los llevaría a")
         Console.WriteLine("su casa." + Environment.NewLine)
         Console.WriteLine("El mapa estaba compuesto de 3 partes, las cuales se hacen visible, cada vez que")
-        Console.WriteLine("puedan vencer un desaf�o.")
+        Console.WriteLine("puedan vencer un desafío." + Environment.NewLine)
+
+#Region "Desafio no. 1"
+        Console.WriteLine("Para poder hacer visible la segunda parte del mapa, deben poder llegar a la cima de")
+        Console.WriteLine("una montaña, pero, desde el punto en que se encuentran, no saben, a que distancia")
+        Console.WriteLine("esta la montaña ni la altura que deben escalar, esto es posible conocerlo si se resuelve")
+        Console.WriteLine("el siguiente problema:" + Environment.NewLine)
+
+        Dim x(1) As Integer
+        Dim suma, sumaCuadrado, promedio, total As Integer
+        Dim tiempo, velocidad As Integer
+        'Dim A, B, C, D, E As Integer
+        Dim i As Integer = 0
+        Dim numbers(4) As Double
+
+        While x.Length > i
+            Console.WriteLine("Introduzca el numero {0}er", i + 1)
+            Try
+                x(i) = Console.ReadLine()
+                Console.WriteLine()
+                i += 1
+            Catch ex As Exception
+                Console.WriteLine("DEBE INTRODUCIR UN NUMERO")
+                Console.WriteLine()
+            End Try
+
+        End While
+
+        Select Case x.Any
+            Case x(0) > x(1)
+                Console.WriteLine("MAYOR")
+                suma = x(0) + x(1)
+
+                If (suma Mod x(0)) = 0 Or (suma Mod x(1)) = 0 Then
+                    Console.WriteLine("La suma tiene una division exacta con alguno de los numeros")  'NO SE QUE HACER AQUI SI NO SE PUEDE
+                    i = 0
+                    While numbers.Length > i
+                        Console.WriteLine("Introduzca el numero {0}", i + 1)
+                        Try
+                            numbers(i) = Console.ReadLine()
+                            Console.WriteLine()
+                            i += 1
+                        Catch ex As Exception
+                            Console.WriteLine("DEBE INTRODUCIR EL TIEMPO")
+                            Console.WriteLine()
+                        End Try
+                    End While
+
+                    '(C > ((A+B+D+E)/4)) OR (E = ((A + B) * D))
+                    If (numbers(2) > ((numbers(0) + numbers(1) + numbers(3) + numbers(4)) / 4)) Or (numbers(4) = ((numbers(0) + numbers(1)) * numbers(3))) Then
+                        Console.WriteLine("Es la distancia para recorrer para llegar a la cima de la montaña: {0}", Math.Round(DesvEst(numbers) * 10, 2))
+                    Else
+                        Console.WriteLine("OurFriends are already frozen, this is a GAMEOVER")
+                        GameOver()
+                    End If
+
+                Else
+                    sumaCuadrado = x(0) ^ 2 + x(1) ^ 2
+                    promedio = suma / 2
+                    total = suma + sumaCuadrado + promedio
+
+                    If total > 100 Then
+                        While True
+                            Console.WriteLine("Introduzca la velocidad en KM/H ")
+                            Try
+                                velocidad = Console.ReadLine()
+                                Console.WriteLine()
+                                Exit While
+                            Catch ex As Exception
+                                Console.WriteLine("DEBE INTRODUCIR LA VELOCIDAD")
+                                Console.WriteLine()
+                                Continue While
+                            End Try
+                        End While
+
+                        While True
+                            Console.WriteLine("Introduzca el tiempo en Min")
+                            Try
+                                tiempo = Console.ReadLine()
+                                Console.WriteLine()
+                                Exit While
+                            Catch ex As Exception
+                                Console.WriteLine("DEBE INTRODUCIR EL TIEMPO")
+                                Console.WriteLine()
+                                Continue While
+                            End Try
+                        End While
+
+                        Console.WriteLine("La distancia es {0} KM", Math.Round((velocidad * (tiempo / 60)), 2))
+
+                    ElseIf total < 100 Then
+                        Console.WriteLine("GAME OVER")
+                        GameOver()
+                    End If
+
+                End If
+
+            Case x(1) > x(0)
+                Console.WriteLine("MENOR")
+                i = 0
+                While numbers.Length > i
+                    Console.WriteLine("Introduzca el numero {0}", i + 1)
+                    Try
+                        numbers(i) = Console.ReadLine()
+                        Console.WriteLine()
+                        i += 1
+                    Catch ex As Exception
+                        Console.WriteLine("DEBE INTRODUCIR EL TIEMPO")
+                        Console.WriteLine()
+                    End Try
+                End While
+
+                '(C > ((A+B+D+E)/4)) OR (E = ((A + B) * D))
+                If (numbers(2) > ((numbers(0) + numbers(1) + numbers(3) + numbers(4)) / 4)) Or (numbers(4) = ((numbers(0) + numbers(1)) * numbers(3))) Then
+                    Console.WriteLine("Es la distancia para recorrer para llegar a la cima de la montaña: {0}", Math.Round(DesvEst(numbers) * 10, 2))
+                Else
+                    Console.WriteLine("OurFriends are already frozen, this Is a GAMEOVER�")
+                    GameOver()
+                End If
+            Case Else
+                Console.WriteLine("AMBOS SON IGUALES, GAME OVER")
+                GameOver()
+        End Select
+#End Region
+
+#Region "Desafio no. 2"
+        Dim valorA, valorB, valorC As Integer
+
+        Console.WriteLine("Deben enfrentarse al gran dragon ZU (un enorme dragón, a")
+        Console.WriteLine("veces considerado el pájaro de la tormenta, en la ")
+        Console.WriteLine("mitología  de  la  antigua  Mesopotamia.  Nació  en  la montaña Hehe")
+        Console.WriteLine("Para  poder  vencer  al  dragón,  deben  poder  atravesarlo ")
+        Console.WriteLine("con una lanza, para poder hacer esto, deben conocer al ")
+        Console.WriteLine("gran ARES, el Dios de la Guerra injusta. Les va a proporcionar la lanza si resuelven este acetijo." + Environment.NewLine)
+
+        Console.WriteLine("Cada  digito  ha  sido  reemplazado  por  una  letra.  Cada  letra  representa  el  mismo")
+        Console.WriteLine("número allí donde aparece. Los dígitos son 0, 4 y 8 (A, B y C respectivamente). " + Environment.NewLine)
+
+        Console.WriteLine("
+        A   C	A
+    -   C   C	C
+      -------------
+        C   B	C" + Environment.NewLine)
+
+        Console.WriteLine("Introduzcan los valores de A,B,C.")
+        While True
+            Console.WriteLine("Ingrese el valor de A: ")
+            If Integer.TryParse(Console.ReadLine, valorA) Then
+                Exit While
+            Else
+                Console.WriteLine("Por favor ingrese un valor valido.")
+            End If
+        End While
+
+        While True
+            Console.WriteLine("Ingrese el valor de B: ")
+            If Integer.TryParse(Console.ReadLine, valorB) Then
+                Exit While
+            Else
+                Console.WriteLine("Por favor ingrese un valor valido.")
+            End If
+        End While
+
+        While True
+            Console.WriteLine("Ingrese el valor de C: ")
+            If Integer.TryParse(Console.ReadLine, valorC) Then
+                Exit While
+            Else
+                Console.WriteLine("Por favor ingrese un valor valido.")
+            End If
+        End While
+
+        If valorA = 8 And valorB = 0 And valorC = 4 Then
+            Console.WriteLine("Resolvieron el acertijo, Ares les otorga la lanza. Pero solo uno de los tres podra pelear contra el dragon.")
+            Console.WriteLine("Quien sera el valiente que peleara contra Zu?")
+        Else
+            Console.WriteLine("THIS IS AND GAME POINT, THE ISSUE CANNOT BE SOLVED")
+            GameOver()
+        End If
+#End Region
 
 #Region "Desafio no. 3"
-        Dim letra1 As String
-        Dim letra2 As String
+        Dim letra1, letra2 As Char
+        Dim letra1Bin, letra2Bin As String
+        Dim luchador As String
+
+        Console.WriteLine("Ingrese dos letras que pertenezcan al alfabeto." + Environment.NewLine)
 
         While True
             Console.Write("Ingrese la primera letra: ")
 
-            letra1 = Console.ReadLine()
-            If IsNumeric(letra1) Then
-                Console.WriteLine("El valor ingresado es numerico. Por favor ingrese una letra.")
-            Else
+            letra1 = Console.ReadKey.KeyChar
+            Console.WriteLine()
+
+            If Char.IsLetter(letra1) Then
                 Exit While
+            Else
+                Console.WriteLine("Por favor ingrese una letra que pertenezca al alfabeto.")
             End If
         End While
 
         While True
-            Console.Write("Ingrese la primera letra: ")
+            Console.Write("Ingrese la segunda letra: ")
 
-            letra2 = Console.ReadLine()
-            If IsNumeric(letra2) Then
-                Console.WriteLine("El valor ingresado es numerico. Por favor ingrese una letra.")
-            Else
+            letra2 = Console.ReadKey.KeyChar
+            Console.WriteLine()
+
+            If Char.IsLetter(letra1) Then
                 Exit While
+            Else
+                Console.WriteLine("Por favor ingrese una letra que pertenezca al alfabeto.")
+            End If
+        End While
+
+        letra1Bin = Convert.ToByte(letra1).ToString
+        letra2Bin = Convert.ToByte(letra2).ToString
+
+        If letra1Bin(0) = letra2Bin(letra2Bin.Length - 1) Then
+            luchador = mujer
+        Else
+            If hombres(0).Length > hombres(1).Length Then
+                luchador = hombres(0)
+            Else
+                luchador = hombres(1)
+            End If
+        End If
+
+        Console.WriteLine($"{luchador} sérá quien luche contra el dragón.")
+        Console.WriteLine("Para vencer al dragón con la lanza, el luchador debe encontrar su punto débil.")
+
+        Dim x1, x2, y1, y2 As Integer
+        Dim Distancia As Integer
+
+        While True
+            Console.WriteLine($"Ingrese la coordenada X de {luchador}: ")
+
+            If Integer.TryParse(Console.ReadLine, x1) Then
+                If x1 < 500 Or x1 > 1000 Then
+                    Console.WriteLine("El numero debe estar entre 500 y 1000. Intentelo de nuevo")
+                    Continue While
+                End If
+            Else
+                Console.WriteLine("Por favor ingrese un numero valido")
+            End If
+        End While
+
+        While True
+            Console.WriteLine($"Ingrese la coordenada Y de {luchador}: ")
+
+            If Integer.TryParse(Console.ReadLine, x2) Then
+                If x1 = x2 Then
+                    Console.WriteLine("Asegurese de que todos los numeros sean diferentes.")
+                    Continue While
+                End If
+
+                If x1 < 500 Or x1 > 1000 Then
+                    Console.WriteLine("El numero debe estar entre 500 y 1000. Intentelo de nuevo")
+                    Continue While
+                End If
+            End If
+        End While
+
+        While True
+            Console.WriteLine("Ingrese la coordenada X del dragon: ")
+
+            If Integer.TryParse(Console.ReadLine, y1) Then
+                If y1 = x1 Or y1 = x2 Then
+                    Console.WriteLine("Asegurese de que todos los numeros sean diferentes.")
+                    Continue While
+                End If
+
+                If x1 < 500 Or x1 > 1000 Then
+                    Console.WriteLine("El numero debe estar entre 500 y 1000. Intentelo de nuevo")
+                    Continue While
+                End If
+            End If
+        End While
+
+        While True
+            Console.WriteLine("Ingrese la coordenada Y del dragon: ")
+
+            If Integer.TryParse(Console.ReadLine, y2) Then
+                If y2 = y1 Or y2 = x1 Or y2 = x2 Then
+                    Console.WriteLine("Asegurese de que todos los numeros sean diferentes.")
+                    Continue While
+                End If
+
+                If x1 < 500 Or x1 > 1000 Then
+                    Console.WriteLine("El numero debe estar entre 500 y 1000. Intentelo de nuevo")
+                    Continue While
+                End If
             End If
 
         End While
 
-        Console.WriteLine("Los valores introducidos fueron: {0} & {1}", letra1, letra2)
+        Distancia = Math.Sqrt((x2 - x1) ^ 2 + (y2 - y1) ^ 2)
+
+        Console.WriteLine($"El dragón está a {Distancia} metros." + Environment.NewLine)
+        Console.WriteLine($"{luchador} arroja la lanza con todas sus fuerzas, impactando al dragón, que cae herido de gravedad." + Environment.NewLine)
+        Console.WriteLine("Hay un monstruo con mucho más poder que él, y es mejor no enfrentarlo, para hacer")
+        Console.WriteLine("esto y poder subir la montaña, deben pronunciar su nombre tres veces, uno cada")
+        Console.WriteLine("personaje.")
+
+
+#End Region
+
+#Region "Accion 3"
+        Dim desorden As String(,) = New String(9, 1) {{"E", "1"}, {"D", "0"}, {"M", "2"}, {"O", "3"}, {"G", "4"}, {"O", "8"}, {"R", "6"}, {"G", "7"}, {"O", "5"}, {"N", "9"}}
+        Dim solucion As String(,) = New String(9, 1) {{"D", "0"}, {"E", "1"}, {"M", "2"}, {"O", "3"}, {"G", "4"}, {"O", "5"}, {"R", "6"}, {"G", "7"}, {"O", "8"}, {"N", "9"}}
+        While desorden IsNot solucion
+            For j As Integer = 0 To desorden.Length / 2 - 2 Step 1
+                If Integer.Parse(desorden(j, 1)) > Integer.Parse(desorden(j + 1, 1)) Then
+                    Dim tmpArray As String() = New String(1) {}
+
+                    tmpArray(0) = desorden(j, 0)
+                    tmpArray(1) = desorden(j, 1)
+
+                    desorden(j, 0) = desorden(j + 1, 0)
+                    desorden(j, 1) = desorden(j + 1, 1)
+
+                    desorden(j + 1, 0) = tmpArray(0)
+                    desorden(j + 1, 1) = tmpArray(1)
+                End If
+            Next
+
+            Dim palabra_concat As String = ""
+
+            For l As Integer = 0 To desorden.Length / 2 - 1 Step 1
+                palabra_concat += desorden(l, 0)
+            Next
+
+            If palabra_concat = "DEMOGORGON" Then
+                Console.WriteLine("DEMOGORGON!")
+                Console.WriteLine("DEMOGORGON!!")
+                Console.WriteLine("DEMOGORGON!!!")
+                Exit While
+            End If
+        End While
 #End Region
     End Sub
 End Module
