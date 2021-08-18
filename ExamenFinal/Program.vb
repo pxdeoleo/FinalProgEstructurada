@@ -2,11 +2,15 @@
 
 Module Program
     Sub GameOver()
+        'Subrutina. Se encarga de detener el programa
+        'Se le llama cada vez que ocurre un Game Over
         Console.WriteLine("Se acabo el juego.")
         End
     End Sub
 
     Function esPalindroma(cadena As String) As Boolean
+        'Funcion que recibe un String, retorna True o False si
+        'dicho string es un palindromo o no
         If cadena.Length < 2 Then Return True
 
         If cadena(0) = cadena(cadena.Length - 1) Then
@@ -17,6 +21,9 @@ Module Program
     End Function
 
     Function random_name(ByRef names_list As List(Of String)) As String
+        'Funcion. Tomma una lista de strings por referencia. Retorna un string
+        'Se encarga de retornar aleatoriamente uno de los strings de la lista.
+        'Se utiliza para asignar aleatoriamente los nombres de los jugadores
         Dim name As String
         Dim rnd As New Random()
         Dim rnd_index As Integer = rnd.Next(0, names_list.Count - 1)
@@ -27,13 +34,15 @@ Module Program
         Return name
     End Function
 
-    Function DesvEst(x As Double())
+    Function DesvEst(x As Double()) As Double
+        'Funcion. Toma un arreglo de doubles. Retorna un double
+        'Calcula la desviacion estandar de los numeros dentro del arreglo
         Dim suma, resultado As Double
 
         If x.Any Then
             suma = x.Sum(Function(num) Math.Pow(num - x.Average, 2))
             'sum es la suma de todos los datos.
-            'function(num) es para interaturar con los datos del arreglo
+            'function(num) es para interactuar con los datos del arreglo
             'pow es para elevar a una cantidad en este caso 2
             'average es el promedio
             'entonces al numero se le resta el promedio y se eleva al cuadrado
@@ -55,7 +64,8 @@ Module Program
         Console.WriteLine("un papel dentro del pantalón con un nombre, luego los demás hicieron lo mismo." + Environment.NewLine)
 
 #Region "Accion No. 1"
-        ' Lista de nombres Hombres [0-2] Mujeres [3-4] Objetos [5-9]
+        ' Lista de nombres. Hombres en indices [0-2] Mujeres indices [3-4] Objetos indices [5-9]
+        ' Los hombres se almacenen en una lista, la mujer en una variable string
         Dim nombres As New List(Of String)({"Kevin", "Alexander", "Jose", "Ana", "Mabel", "Telefono", "Impresora", "Teclado", "Monitor", "Mouse"})
 
         Dim intentos As Integer = 0
@@ -64,6 +74,7 @@ Module Program
         Dim mujer As String = ""
 
         While True
+            'Bucle para asignar los nombres y verificar si son la cantidad correcta
             Dim tmp_nombres As New List(Of String)({"Kevin", "Alexander", "Jose", "Ana", "Mabel", "Telefono", "Impresora", "Teclado", "Monitor", "Mouse"})
             hombres = New List(Of String)
             mujer = ""
@@ -71,6 +82,7 @@ Module Program
             intentos += 1
 
             For h As Integer = 0 To 2 Step 1
+                'Bucle para asignar los nombres aleatoriamente.
                 Dim player As String
                 player = random_name(tmp_nombres)
 
@@ -87,7 +99,8 @@ Module Program
 
 
             If hombres.Count = 2 And Not String.IsNullOrEmpty(mujer) Then
-                'Console.ReadKey()
+                'Si hay dos hombres y la variable Mujer tiene valor, entonces se rompe
+                'el While y se continua el juego
                 Exit While
             Else
                 If intentos = 5 Then
@@ -152,7 +165,7 @@ Module Program
         Dim numbers(4) As Double
 
         While x.Length > i
-            Console.WriteLine("Introduzca el numero {0}er", i + 1)
+            Console.WriteLine("Introduzca el {0}er numero", i + 1)
             Try
                 x(i) = Console.ReadLine()
                 Console.WriteLine()
@@ -173,7 +186,7 @@ Module Program
                     Console.WriteLine("La suma tiene una division exacta con alguno de los numeros")  'NO SE QUE HACER AQUI SI NO SE PUEDE
                     i = 0
                     While numbers.Length > i
-                        Console.WriteLine("Introduzca el numero {0}", i + 1)
+                        Console.WriteLine("Introduzca el {0}er numero", i + 1)
                         Try
                             numbers(i) = Console.ReadLine()
                             Console.WriteLine()
@@ -282,6 +295,7 @@ Module Program
 
         Console.WriteLine("Introduzcan los valores de A,B,C.")
         While True
+            'Mientras el valor no sea numerico, seguira pidiendo el numero
             Console.WriteLine("Ingrese el valor de A: ")
             If Integer.TryParse(Console.ReadLine, valorA) Then
                 Exit While
@@ -327,9 +341,12 @@ Module Program
         While True
             Console.Write("Ingrese la primera letra: ")
 
+            'Se toma la tecla que el usuario presione y se obtiene su Char
             letra1 = Console.ReadKey.KeyChar
             Console.WriteLine()
 
+            'Si el Char es una letra, se rompe el bucle y se continua con la proxima
+            'Sino, se alerta al usuario y se solicita de nuevo
             If Char.IsLetter(letra1) Then
                 Exit While
             Else
@@ -350,9 +367,14 @@ Module Program
             End If
         End While
 
+        ' Se convierten la letra a Byte (Su representacion ASCII) y posteriormente a String
+
         letra1Bin = Convert.ToByte(letra1).ToString
         letra2Bin = Convert.ToByte(letra2).ToString
 
+        'Se compara el primer digito (primer caracter del string) con el ultimo
+        'Si son iguales, luchador es la mujer
+        'Si no, luchador es el hombre con el apellido mas largo
         If letra1Bin(0) = letra2Bin(letra2Bin.Length - 1) Then
             luchador = mujer
         Else
@@ -372,6 +394,8 @@ Module Program
         While True
             Console.WriteLine($"Ingrese la coordenada X de {luchador}: ")
 
+            'Se verifica que el dato que ingrese el usuario sea un numero
+            'Y que este entre 500 y 1000
             If Integer.TryParse(Console.ReadLine, x1) Then
                 If x1 < 500 Or x1 > 1000 Then
                     Console.WriteLine("El numero debe estar entre 500 y 1000. Intentelo de nuevo")
@@ -386,6 +410,8 @@ Module Program
             Console.WriteLine($"Ingrese la coordenada Y de {luchador}: ")
 
             If Integer.TryParse(Console.ReadLine, x2) Then
+                'Ademas de las validaciones anteriores, se comprueba que el numero que se ingrese
+                'no sea igual a los anteriores
                 If x1 = x2 Then
                     Console.WriteLine("Asegurese de que todos los numeros sean diferentes.")
                     Continue While
@@ -443,13 +469,25 @@ Module Program
 #End Region
 
 #Region "Accion 3"
+
+        'Se crean dos arreglos bidimensionales. Contienen una letra y un numero. El numero representa el orden
+        'en el que van las letras de la palabra DEMOGORGON
+
+        'desorden representa la palabra D M O G O R G O N
+
         Dim desorden As String(,) = New String(9, 1) {{"E", "1"}, {"D", "0"}, {"M", "2"}, {"O", "3"}, {"G", "4"}, {"O", "8"}, {"R", "6"}, {"G", "7"}, {"O", "5"}, {"N", "9"}}
-        Dim solucion As String(,) = New String(9, 1) {{"D", "0"}, {"E", "1"}, {"M", "2"}, {"O", "3"}, {"G", "4"}, {"O", "5"}, {"R", "6"}, {"G", "7"}, {"O", "8"}, {"N", "9"}}
-        While desorden IsNot solucion
+
+        While True
+            'Debido a que Length retorna todos los elementos del arreglo (que en total son 20), se divide en 2
+            'para acceder solo a los numeros y no a las letras
             For j As Integer = 0 To desorden.Length / 2 - 2 Step 1
+                'Se compara si el numero de la izquierda es mayor al de la derecha
+                'Si lo es, intercambian lugares
                 If Integer.Parse(desorden(j, 1)) > Integer.Parse(desorden(j + 1, 1)) Then
                     Dim tmpArray As String() = New String(1) {}
 
+                    'Se almacena uno de las duplas temporalmente
+                    'en un arreglo de dos posiciones
                     tmpArray(0) = desorden(j, 0)
                     tmpArray(1) = desorden(j, 1)
 
@@ -463,9 +501,12 @@ Module Program
 
             Dim palabra_concat As String = ""
 
+            'Se concatenan las letras del arreglo en un string, letra por letra
             For l As Integer = 0 To desorden.Length / 2 - 1 Step 1
                 palabra_concat += desorden(l, 0)
             Next
+
+            Console.WriteLine(palabra_concat + Environment.NewLine)
 
             If palabra_concat = "DEMOGORGON" Then
                 Console.WriteLine("DEMOGORGON!")
@@ -473,7 +514,18 @@ Module Program
                 Console.WriteLine("DEMOGORGON!!!")
                 Exit While
             End If
+
         End While
 #End Region
+
+        Console.WriteLine($"Gritaron {hombres(0)}, {mujer} y {hombres(1)}.")
+        Console.WriteLine("Inmediatamente son teletransportados a la cima de la montaña.")
+        Console.WriteLine("Habiendo cumplido los 3 desafíos, la llave es")
+        Console.WriteLine("entregada a ellos por el venger, que admitiendo")
+        Console.WriteLine("su derrota les permite continuar su camino hacia")
+        Console.WriteLine("su hogar entregándoles la llave del gran portón." + Environment.NewLine)
+
+        Console.WriteLine("Fin del juego. Presione cualquier tecla para concluir.")
+        Console.ReadKey()
     End Sub
 End Module
